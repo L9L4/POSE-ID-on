@@ -3,7 +3,7 @@ import copy
 from copy import deepcopy
 import math
 
-class MatchingClassox():
+class MatchingClass2():
 
   links = [[0,1],[1,2],[2,3],[3,4],[1,5],[5,6],[1,8],[7,6],[8,9],
            [8,12],[9,10],[10,11],[12,13],[13,14]]
