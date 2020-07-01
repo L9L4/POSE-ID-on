@@ -169,5 +169,5 @@ def mean_reconstruction_error(n_clusters, dict_joints_SR_destrorso):
         mean_error = (np.sum(diffs)/91)*180/np.pi
         mean_errors.append(mean_error)
     MRE = np.mean(np.array(mean_errors))
-    print("Mean reconstruction error = {}".format(MRE))
+    print("Mean reconstruction error = {}°".format(MRE))
     return MRE, mean_errors
