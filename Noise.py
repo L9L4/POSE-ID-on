@@ -1,9 +1,9 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from First_method import *
 from Second_method import *
-
+import operator
+from utils import *
 
 class Noises():
 
@@ -17,21 +17,12 @@ class Noises():
     self.method = method
 
   def calc_radius(self):
-    punto_medio = []
-    j_0 = 0
-    j_1 = 0
-    for i in range(len(self.posa)):
-      j_0 += self.posa[i][0]
-      j_1 += self.posa[i][1]
-    punto_medio.append([j_0, j_1])
-    punto_medio = [punto_medio[0][0]/len(self.posa), punto_medio[0][1]/len(self.posa)]
-
-    dista = 0
-    for punto in self.posa:
-      dista += np.power(punto[0]-punto_medio[0], 2) + np.power(punto[1]-punto_medio[1], 2)
-    dista = dista/len(self.posa)
-
-    return np.sqrt(dista)
+  	punto_medio = [np.mean(np.array(self.posa)[:,0]), np.mean(np.array(self.posa)[:,1])]
+  	dista = 0
+  	for punto in self.posa:
+  		dista += np.power(punto[0]-punto_medio[0], 2) + np.power(punto[1]-punto_medio[1], 2)
+  	dista = dista/len(self.posa)
+  	return np.sqrt(dista)
 
   def make_noised_poses(self, sigma = 0.05):
     radius = self.calc_radius()
@@ -92,26 +83,26 @@ class Noises():
   def print_position(self):
     met = []
 
-    dict_losses_with_nan = {}
+    dict_losses = {}
   
     dict_joints = {}
-    for i in range(len(self.joints)):
-      dict_joints[i] = self.joints[i]
+  
+
+    for i in range(len(list(self.joints.keys()))):
+    	dict_joints[i] = self.joints[list(self.joints.keys())[i]]
 
     for key in dict_joints.keys():
       if self.method == 1:
         MC = MatchingClass1(self.posa, dict_joints[key])
         loss = MC.minimum()[1]
-        dict_losses_with_nan[key] = loss
+        dict_losses[key] = loss
       elif self.method == 2:
         MC = MatchingClass2(self.posa, dict_joints[key])
         MC.weight = 1
         loss = MC.loss()
-        dict_losses_with_nan[key] = loss
+        dict_losses[key] = loss
       else:
         raise Exception('Valid methods 1 or 2')
-      
-      dict_losses = {key:val for key, val in dict_losses_with_nan.items() if not isnan(val)}
       
       met.append(dict_losses)
 
@@ -140,10 +131,10 @@ class Noises():
     return position, num_position
 
 
-def graph_losses(losses_sigma, bawc, sigma_range):
+def graph_losses(losses_sigma, bwc, sigma_range):
   plt.figure(figsize=(10,10))
   plt.plot(sigma_range, list(losses_sigma.values()), 'bo-')
-  plt.hlines(bawc, min(sigma_range)-1, max(sigma_range)+1, 'r')
+  plt.hlines(bwc, min(sigma_range)-1, max(sigma_range)+1, 'r')
   plt.grid(which = "both")
   plt.title("Noised losses")
   plt.xlabel("Sigma (-)")

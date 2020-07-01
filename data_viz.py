@@ -83,3 +83,13 @@ def show_pose(i, dict_joints, dir_im):
         plt.plot(punti_prova[n][0], punti_prova[n][1], 'ro')
         ax.annotate(n, (punti_prova[n][0], punti_prova[n][1]))
     return
+
+def show_single_pose(i, punti_prova, dict_joints, dir_im):
+    fig, ax = plt.subplots(figsize = (15,15))
+    im = cv2.imread(dir_im+'/'+list(dict_joints.keys())[i] + "_rendered.png")
+    print(os.listdir(dir_im)[i])
+    plt.imshow(im/255.0)
+    for n in range(len(punti_prova)):
+        plt.plot(punti_prova[n][0], punti_prova[n][1], 'ro')
+        ax.annotate(n, (punti_prova[n][0], punti_prova[n][1]))
+    return

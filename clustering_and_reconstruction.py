@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 import os
 import pandas as pd
 from KMeans import *
@@ -62,7 +63,7 @@ def k_means(x, df, n_clusters = 10):
 
   return new_df, relevant_features_cs, cs
 
-def ric_posa(relevant_features_cs, cluster, output_folder, dists):
+def ric_posa(relevant_features_cs, cluster, output_folder, dists, save = True):
 
   links = [[0,1],[1,2],[2,3],[3,4],[1,5],[5,6],[1,8],[7,6],[8,9],[8,12],[9,10],[10,11],[12,13],[13,14]]
 
@@ -101,23 +102,25 @@ def ric_posa(relevant_features_cs, cluster, output_folder, dists):
           Y_t = rec_pose[links[link1][0]][1]   
           rec_pose[links[link1][1]][0] = np.cos(alfa)*dists[link1] + X_t
           rec_pose[links[link1][1]][1] = np.sin(alfa)*dists[link1] + Y_t
+  if save == True:
+    fig, ax = plt.subplots(figsize = (10,15))
 
-  fig, ax = plt.subplots(figsize = (10,15))
-  
-  if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
+    if not os.path.exists(output_folder):
+      os.makedirs(output_folder)
 
-  for n in range(len(rec_pose)):
-      plt.plot(rec_pose[n][0], rec_pose[n][1], 'ro')
-      ax.annotate(n, (rec_pose[n][0], rec_pose[n][1]))
-      ax.set_aspect(aspect = "equal")   
-  for l in range(len(links)):
-      p1, p2 = links[l]
-      plt.plot([rec_pose[p1][0], rec_pose[p2][0]],[rec_pose[p1][1], rec_pose[p2][1]], '-')
-  
-  plt.savefig(output_folder + os.sep + "{}.png".format(cluster))
+    for n in range(len(rec_pose)):
+        plt.plot(rec_pose[n][0], rec_pose[n][1], 'ro')
+        ax.annotate(n, (rec_pose[n][0], rec_pose[n][1]))
+        ax.set_aspect(aspect = "equal")   
+    for l in range(len(links)):
+        p1, p2 = links[l]
+        plt.plot([rec_pose[p1][0], rec_pose[p2][0]],[rec_pose[p1][1], rec_pose[p2][1]], '-')
+    
+    plt.savefig(output_folder + os.sep + "{}.png".format(cluster))
 
-  plt.close()
+    plt.close()
+  else:
+    pass
   return rec_pose
 
 def clustering_several_n(list_n_clusters, dict_):
@@ -141,3 +144,30 @@ def clustering_several_n(list_n_clusters, dict_):
           f.write("\n\n")
       print("Clustering with {} clusters: done".format(n_c))
     return
+
+def mean_reconstruction_error(n_clusters, dict_joints_SR_destrorso):
+    df_clustering, relevant_features_centroids, centroids = k_means(create_features(dict_joints_SR_destrorso)[0], 
+                                                                create_features(dict_joints_SR_destrorso)[1], 
+                                                                n_clusters)
+    dists = dist_medie(dict_joints_SR_destrorso)
+    mean_errors = []
+    for j in range(len(centroids)):
+        reconstructed_pose = ric_posa(relevant_features_centroids, j, dists = dists, output_folder = "./.", save = False)
+        MC = MatchingClass2(reconstructed_pose, reconstructed_pose)
+        features = MC.calcolo_angoli(reconstructed_pose)
+        
+        diffs = []
+        for i in range(features.shape[0]):
+          diff_1 = np.abs(features[i] - centroids[j][i])
+          if diff_1 <= np.pi:
+            diff_2 = diff_1
+          else:
+            diff_2 = np.min([np.abs(features[i] - centroids[j][i] - 2*np.pi), np.abs(features[i] - centroids[j][i]+ 2*np.pi)])  
+          diffs.append(diff_2)
+
+        diffs = np.array(diffs)
+        mean_error = (np.sum(diffs)/91)*180/np.pi
+        mean_errors.append(mean_error)
+    MRE = np.mean(np.array(mean_errors))
+    print("Mean reconstruction error = {}".format(MRE))
+    return MRE, mean_errors
