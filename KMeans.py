@@ -8,7 +8,7 @@ class K_Means:
         self.tol = tol
         self.max_iter = max_iter
 
-     def diff(self, l1, l2):
+    def diff(self, l1, l2):
       diffs =  []
       for i in range(len(l1)):
         diff_1 = np.abs(l1[i] - l2[i])
@@ -45,7 +45,7 @@ class K_Means:
         for i in range(self.k):
             self.centroids[i] = data[self.samples[i]]
 
-        for i in tqdm(range(self.max_iter)):
+        for i in range(self.max_iter):
             self.classifications = {}
 
             for i in range(self.k):
