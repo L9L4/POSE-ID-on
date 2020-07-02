@@ -72,14 +72,8 @@ class MatchingClass2():
   def diff(self, l1, l2):
     diffs =  []
     for i in range(len(l1)):
-      diff_1 = np.abs(l1[i] - l2[i])
-      if diff_1 <= np.pi:
-        diff_2 = diff_1
-      else:
-        diff_2 = np.min([np.abs(l1[i] - l2[i] - 2*np.pi), np.abs(l1[i] - l2[i] + 2*np.pi)])
-      
-      diffs.append(diff_2)
-    
+      distance = 1-np.cos(l1-l2)
+      diffs.append(distance)
     return np.mean(diffs)
 
   def loss(self):

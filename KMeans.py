@@ -3,7 +3,7 @@ import random
 from tqdm import tqdm
 
 class K_Means:
-    def __init__(self, k=2, tol=0.001, max_iter=300):
+    def __init__(self, k=2, tol=0.0001, max_iter=300):
         self.k = k
         self.tol = tol
         self.max_iter = max_iter
@@ -11,12 +11,8 @@ class K_Means:
     def diff(self, l1, l2):
       diffs =  []
       for i in range(len(l1)):
-        diff_1 = np.abs(l1[i] - l2[i])
-        if diff_1 <= np.pi:
-          diff_2 = diff_1
-        else:
-          diff_2 = np.min([np.abs(l1[i] - l2[i] - 2*np.pi), np.abs(l1[i] - l2[i] + 2*np.pi)])
-        diffs.append(diff_2)
+        distance = 1-np.cos(l1-l2)
+        diffs.append(distance)
       return np.mean(diffs)
     
     def angular_mean(self, feature):
@@ -45,7 +41,7 @@ class K_Means:
         for i in range(self.k):
             self.centroids[i] = data[self.samples[i]]
 
-        for i in range(self.max_iter):
+        for j in range(self.max_iter):
             self.classifications = {}
 
             for i in range(self.k):
@@ -66,8 +62,7 @@ class K_Means:
             for c in self.centroids:
                 original_centroid = prev_centroids[c]
                 current_centroid = self.centroids[c]
-                if np.sum((current_centroid-original_centroid)/original_centroid*100.0) > self.tol:
-                    # print(np.sum((current_centroid-original_centroid)/original_centroid*100.0))
+                if self.diff(original_centroid,current_centroid) > self.tol:
                     optimized = False
 
             if optimized:

@@ -20,12 +20,8 @@ def diff_angs(ang1, ang2):
     return diff        
 
 def diff(l1, l2):
-  diff_1 = np.abs(l1 - l2)
-  if diff_1 <= np.pi:
-    diff_2 = diff_1
-  else:
-    diff_2 = np.min([np.abs(l1 - l2 - 2*np.pi), np.abs(l1 - l2 + 2*np.pi)])   
-  return diff_2
+  distance = 1-np.cos(l1-l2)
+  return distance
 
 def angolo(joint_a, joint_b, joint_c, joint_d):
     v1 = np.array(joint_a) - np.array(joint_b)
