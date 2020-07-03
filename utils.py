@@ -2,6 +2,9 @@ import math
 import copy
 from copy import deepcopy
 import numpy as np
+from tqdm import tqdm
+import os 
+import json
 
 def ang(v):
     if math.atan2(v[1], v[0]) > 0:
@@ -97,3 +100,41 @@ def turn_pose(pose):
       t_pose[i][0] = - pose[i][0] + M
 
     return t_pose
+
+def load_poses(dir_im, dir_joints):
+    dict_joints = {}
+    dict_joints_SR_destrorso = {}
+    for posa in tqdm(os.listdir(dir_im)):
+        posa1 = posa[:-13]
+        posa = posa1 + "_keypoints.json"
+        try:
+            file = dir_joints+'/'+posa
+            if os.path.isfile(file):
+              with open(file) as f:
+                data = json.load(f)
+              prova = data['people'][0]['pose_keypoints_2d']
+              punti = []
+              punti1 = []
+              i = 0
+              max_y = 0.0
+              while i < 75:
+                x = prova[i]
+                y1 = prova[i+1]
+                y2 = -prova[i+1]
+                punto = [x,y1]
+                punto1 = [x,y2]
+                punti.append(punto)
+                punti1.append(punto1)
+                i += 3
+                if np.abs(y1)> max_y:
+                    max_y = np.abs(y1)
+              punti = punti[:15]
+              punti1 = punti1[:15]
+              for i in range(len(punti1)):
+                punti1[i][1] += max_y
+
+              dict_joints[posa1] = punti
+              dict_joints_SR_destrorso[posa1] = punti1
+        except:
+            print(posa)
+    return dict_joints, dict_joints_SR_destrorso

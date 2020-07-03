@@ -132,7 +132,11 @@ def clustering_several_n(list_n_clusters, dict_):
     
     trials = np.array(list_n_clusters)
 
+    all_poses = {}
+    df_cl = {}
+
     for n_c in trials:
+      n_c_poses = []
       new_df, relevant_features_cs, cs = k_means(create_features(dict_)[0], create_features(dict_)[1], n_c)
       out_fold = root + os.sep + str(n_c)
       if not os.path.exists(out_fold):
@@ -140,10 +144,13 @@ def clustering_several_n(list_n_clusters, dict_):
       with open(out_fold + os.sep + str(n_c) + ".txt", "w") as f:
         for i in range(n_c):
           rec_p = ric_posa(relevant_features_cs, i, out_fold, dists = dists)
+          n_c_poses.append(rec_p)
           f.write(str(list(new_df[new_df['label'] == i].index)))
           f.write("\n\n")
+      df_cl[n_c] = new_df
+      all_poses[n_c] = n_c_poses
       print("Clustering with {} clusters: done".format(n_c))
-    return
+    return df_cl, all_poses
 
 def mean_reconstruction_error(n_clusters, dict_joints_SR_destrorso):
     df_clustering, relevant_features_centroids, centroids = k_means(create_features(dict_joints_SR_destrorso)[0], 

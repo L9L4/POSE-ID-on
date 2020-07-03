@@ -2,6 +2,8 @@ import numpy as np
 import copy
 from copy import deepcopy
 import math
+from tqdm import tqdm
+import operator
 
 class MatchingClass2():
 
@@ -86,3 +88,21 @@ class MatchingClass2():
     return min(self.diff(np.array(ang_pose_a), np.array(ang_pose_b)), 
                self.diff(np.array(ang_pose_mirr_a), np.array(ang_pose_b)), 
                self.diff(np.array(ang_pose_t_a), np.array(ang_pose_b)))
+
+def second_method_app(dict_joints_SR_destrorso):
+    best_worst_cases_2 = {}
+    for i in tqdm(range(len(dict_joints_SR_destrorso))):
+        sample = dict_joints_SR_destrorso[list(dict_joints_SR_destrorso.keys())[i]]
+        dict_losses = {}
+        for key in list(dict_joints_SR_destrorso.keys()):  
+            MC = MatchingClass2(sample, dict_joints_SR_destrorso[key])
+            MC.weight = 1
+            loss = MC.loss()
+            dict_losses[key] = loss
+
+        sorted_d = sorted(dict_losses.items(), key=operator.itemgetter(1))
+        best_5 = sorted_d[:5]
+        worst = sorted_d[-1]
+
+        best_worst_cases_2[i] = [best_5, worst]
+    return best_worst_cases_2

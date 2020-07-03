@@ -1,5 +1,7 @@
 import numpy as np
 from scipy.optimize import fmin
+from tqdm import tqdm
+import operator
 
 
 class MatchingClass1:
@@ -68,3 +70,27 @@ class MatchingClass1:
         omega_star = fmin(self.function, 0, disp=False)[0]
         loss = self.function(omega_star)
         return omega_star, loss
+
+def first_method_app(dict_joints_SR_destrorso, mirroring = False, turning = False):
+    best_worst_cases_1 = {}
+    for i in tqdm(range(len(dict_joints_SR_destrorso))):
+        sample = dict_joints_SR_destrorso[list(dict_joints_SR_destrorso.keys())[i]]
+        samples = [sample]
+        if mirroring == True:
+            sample_mirr = pose_mirroring(sample)
+            samples.append(sample_mirr)
+        if turning == True:
+            sample_turn = turn_pose(sample)
+            samples.append(sample_turn)
+
+        dict_losses = {}
+        for key in list(dict_joints_SR_destrorso.keys()):  
+            losses = [MatchingClass1(s, dict_joints_SR_destrorso[key]).minimum()[1] for s in samples]
+            dict_losses[key] = np.min(losses)
+
+        sorted_d = sorted(dict_losses.items(), key=operator.itemgetter(1))
+        best_5 = sorted_d[:5]
+        worst = sorted_d[-1]
+
+        best_worst_cases_1[i] = [best_5, worst]
+    return best_worst_cases_1
