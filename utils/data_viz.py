@@ -3,12 +3,15 @@ import cv2
 import os
 
 def plot_images(dir_im, t = 0, best_worst_cases = {}):
+  
   """
-  This function plots a selected query with the 5 most similar poses (included itself), and the least similar one
-  dir_im: the directory in which the images are stored
-  t: the query ID
-  best_worst_cases: the dictionary in which are stored the results of the comparison
+  This function plots the selected query with the 5 most similar poses (included the query itself), and the least similar one
+  Args:
+  	dir_im: rendered image directory
+  	t: the query ID
+  	best_worst_cases: the dictionary which stores the results of the comparison
   """
+  
   fig = plt.figure(figsize=(40, 40))
   im_list = [a[0] for a in best_worst_cases[list(best_worst_cases.keys())[t]][0]] + [best_worst_cases[list(best_worst_cases.keys())[t]][1][0]]
   
@@ -43,12 +46,14 @@ def plot_images(dir_im, t = 0, best_worst_cases = {}):
 
 
 def save_images(dir_im, t = 0, method = 1, dictionary = {}):
+  
   """
-  This function saves a selected query image with the 5 most similar poses (included itself), and the least similar one
-  dir_im: the directory in which the images are stored
-  t: the query ID
-  method: the selected matching class method. Could be 1 or 2.
-  dictionary: the dictionary in which are stored the results of the comparison
+  This function saves the selected query image with the 5 most similar poses (included the query itself), and the least similar one.
+  Args:
+  	dir_im: rendered image directory
+  	t: the query ID
+  	method: the selected matching class method. [1/2]
+  	dictionary: the dictionary which stores the results of the comparison
   """
   
   assert method == 1 or method == 2, "Invalid method"
@@ -86,12 +91,15 @@ def save_images(dir_im, t = 0, method = 1, dictionary = {}):
 
 
 def show_pose(i, dict_joints, dir_im):
+    
     """
     Visualize the single pose.
-    i: the query ID
-    dict_joints: the dictionary in which the joints are stored
-    dir_im: the directory in which the images are stored
+    Args:
+	    i: the query ID
+    	dict_joints: the dictionary which stores the joints
+    	dir_im: rendered image directory
     """
+    
     punti_prova = dict_joints[list(dict_joints.keys())[i]]
     fig, ax = plt.subplots(figsize = (15,15))
     im = cv2.imread(dir_im+'/'+list(dict_joints.keys())[i] + "_rendered.png")
@@ -103,13 +111,16 @@ def show_pose(i, dict_joints, dir_im):
     return
 
 def show_single_pose(i, punti_prova, dict_joints, dir_im):
+    
     """
-    Visualize the single pose, given the keypoints.
-    i: the query ID
-    punti_prova: the list of keypoints of the selected query
-    dict_joints: the dictionary in which the joints are stored
-    dir_im: the directory in which the images are stored
+    Visualize the single pose, given the keypoints (even the noisy ones).
+    Args:
+	    i: the query ID
+    	punti_prova: the list of keypoints of the selected query
+    	dict_joints: the dictionary which stores the joints
+    	dir_im: rendered image directory
     """
+    
     fig, ax = plt.subplots(figsize = (15,15))
     im = cv2.imread(dir_im+'/'+list(dict_joints.keys())[i] + "_rendered.png")
     print(os.listdir(dir_im)[i])
@@ -120,14 +131,17 @@ def show_single_pose(i, punti_prova, dict_joints, dir_im):
     return
 
 def watch_samples(n_cl_show, df_cls, rec_poses, n_cluster_list, dir_im):
+    
     """
-    Show the reconstructed poses of a clustering with n_cl_show clusters and up to five samples of each cluster.
-    n_cl_show: the number of clusters of the selected clustering
-    df_cls: a dictionary composed by the dataframes (each containing the statues, the features and the label) of each clustering
-    rec_poses: a dictionary composed by the reconstructed poses of each clustering
-    n_cluster_list: a list of the numbers of clusters of each clustering
-    dir_im: the directory in which the images are stored
+    Show the poses reconstructed from the centroids resulting from clustering with n_cl_show clusters, and up to five samples for each cluster.
+    Args:
+	    n_cl_show: the number of clusters of the selected clustering to visualize 
+    	df_cls: a dictionary composed by the dataframes (containing the statue names, their features and their cluster labels) for each clustering
+    	rec_poses: a dictionary composed by the reconstructed poses of each clustering
+    	n_cluster_list: a list with the number of clusters for each clustering
+    	dir_im: rendered image directory
     """
+    
     links = [[0,1],[1,2],[2,3],[3,4],[1,5],[5,6],[1,8],[7,6],[8,9],[8,12],[9,10],[10,11],[12,13],[13,14]]
 
     all_samples = {}

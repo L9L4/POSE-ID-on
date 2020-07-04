@@ -8,7 +8,7 @@ from utils.utils import *
 class MatchingClass1:
 
     """
-    Matching Class Method 1
+    Matching Class Method 1.
     """
     
     links = [[0,1],[1,2],[2,3],[3,4],[1,5],[5,6],[1,8],[7,6],[8,9],[8,12],
@@ -22,7 +22,7 @@ class MatchingClass1:
     def coefficients(self, joint_1_a, joint_2_a, joint_1_b, joint_2_b):
 
         """
-        Computes auxiliary coefficients starting from 4 points: joint_1_a, joint_2_a, joint_1_b, joint_2_b
+        Compute auxiliary coefficients starting from 4 points: joint_1_a, joint_2_a, joint_1_b, joint_2_b.
         """
     
         x_1a = joint_1_a[0]
@@ -55,8 +55,8 @@ class MatchingClass1:
     def omega_i(self, omega, i):
         
         """
-        Computes the angle omega_i between the i-th limbs of two different poses, 
-        having previously rotated the second pose by an angle omega
+        Compute the angle omega_i between the i-th limbs of two different poses, 
+        having previously rotated the second pose by an angle omega.
         """
 
         delta, epsilon = self.coefficients(self.pose_a[self.links[i][0]], 
@@ -66,10 +66,12 @@ class MatchingClass1:
         return np.arccos(delta*np.cos(omega) + epsilon*np.sin(omega))
 
     def function(self, omega):
+        
         """
         Sum all the angles omega_i obtained by comparing all the limbs of the two poses, 
-        having previously rotated the second pose by an angle omega
+        having previously rotated the second pose by an angle omega.
         """
+        
         function = 0*omega
     
         for i in range(len(self.links)):
@@ -78,9 +80,11 @@ class MatchingClass1:
         return function
 
     def rotation(self, x, omega):
+        
         """
         Rotate the pose x by an angle omega
         """
+        
         x0, y0 = x.T[0], x.T[1]
         c, s = np.cos(omega), np.sin(omega)
         x1 = c*x0 - s*y0
@@ -89,15 +93,18 @@ class MatchingClass1:
         return x_1 
     
     def minimum(self):
+        
         """
         Get the optimal value omega_star of omega by which the two poses are most similar, and
-        then compute the difference (loss) according to that omega
+        then compute the difference (loss) according to that omega.
         """
+        
         omega_star = fmin(self.function, 0, disp=False)[0]
         loss = self.function(omega_star)
         return omega_star, loss
 
 def first_method_app(dict_joints_SR_destrorso, mirroring = False, turning = False):
+    
     """
     Apply the first method to search for the most similar poses to a given one (within the dictionary dict_joints_SR_destrorso).
     Mirroring and turning can be selected.
@@ -106,6 +113,7 @@ def first_method_app(dict_joints_SR_destrorso, mirroring = False, turning = Fals
             keys: poses of the input dictionary
             values: list with the 5 closest poses (inluding the query) and the farthest one
     """
+    
     best_worst_cases_1 = {}
     for i in tqdm(range(len(dict_joints_SR_destrorso))):
         sample = dict_joints_SR_destrorso[list(dict_joints_SR_destrorso.keys())[i]]

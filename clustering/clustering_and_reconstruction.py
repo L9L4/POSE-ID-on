@@ -10,9 +10,14 @@ from methods.Second_method import *
 
 
 def create_features(dict_joints_SR_destrorso):
+	
 	"""
 	For each pose in dict_joints_SR_destrorso, compute the 91 features with Matching Class 2 method.
+	Output:
+		x: array of features
+		df: dataframe of features
 	"""
+	
 	features = {}
 
 	for i in dict_joints_SR_destrorso.keys():
@@ -35,15 +40,17 @@ def create_features(dict_joints_SR_destrorso):
 	return x, df
 
 def k_means(x, df, n_clusters = 10):
+  
   """
   Do the KMeans clustering, based on the 91 features.
   Args:
 	  x: array of features
 	  df: dataframe of features
+	  n_clusters: number of clusters
   Output:
-	  new_df: the labeled dataframe, according to the kmeans alg
+	  new_df: the labeled dataframe, according to the KMeans algorithm
 	  relevant_features_cs: a list with the relevant features (angles of the consecutive limbs) of the centroids
-	  cs: dictionary with the features of the centroids
+	  cs: dictionary with the centroid features 
   """
 
   relevant_features_id = [0,3,5,13,15,17,25,46,47,56,64,65,76,77,83,85,90]
@@ -76,14 +83,15 @@ def k_means(x, df, n_clusters = 10):
   return new_df, relevant_features_cs, cs
 
 def ric_posa(relevant_features_cs, cluster, output_folder, dists, save = True):
+  
   """
-  Compute and plot the pose of the centroid of kmeans.
+  Compute and plot the pose reconstructed from a centroid obtained with KMeans.
   Args:
   	relevant_features_cs: a list with the relevant features (angles of the consecutive limbs) of the centroids
   	cluster: cluster ID
   	output_folder: output folder
-  	dists: the average lenghts of each limb
-  	save: if True save the reconstructed pose as image
+  	dists: the average lenght of each limb, computed on the basis of the whole dataset
+  	save: if True, save the reconstructed pose as image
   """
 
   links = [[0,1],[1,2],[2,3],[3,4],[1,5],[5,6],[1,8],[7,6],[8,9],[8,12],[9,10],[10,11],[12,13],[13,14]]
@@ -145,15 +153,17 @@ def ric_posa(relevant_features_cs, cluster, output_folder, dists, save = True):
   return rec_pose
 
 def clustering_several_n(list_n_clusters, dict_):
+	
 	"""
-	Compute the kmeans algorithm for several all the n values contained in list_n_clusters.
+	Compute the KMeans algorithm for all the values contained in list_n_clusters.
 	Args:
-		list_n_clusters: list of numbers of clusters of each clustering
+		list_n_clusters: list with the number of clusters for each clustering
 		dict_: dictionary with all the poses
 	Output:
-		df_cl: a dictionary composed by the dataframes (each containing the statues, the features and the label) of each clustering
+		df_cls: a dictionary composed by the dataframes (containing the statue names, their features and their cluster labels) for each clustering
 		all_poses: a dictionary composed by the reconstructed poses of each clustering
 	"""
+	
 	root = os.getcwd() + os.sep + "Cluster"
 	dists = dist_medie(dict_)
 
@@ -183,6 +193,7 @@ def clustering_several_n(list_n_clusters, dict_):
 	return df_cl, all_poses
 
 def mean_reconstruction_error(n_clusters, dict_joints_SR_destrorso):
+	
 	"""
 	For all the centroids obtained from KMeans with n_clusters clusters, compute the difference between the centroid feature vector and the one
 	obtained from the reconstructed pose.
@@ -190,9 +201,10 @@ def mean_reconstruction_error(n_clusters, dict_joints_SR_destrorso):
 		n_clusters: number of clusters 
 		dict_joints_SR_destrorso: pose dictionary
 	Outputs:
-		MRE: mean reconstruction error w.r.t. to n_clusters
+		MRE: mean reconstruction error with respect to the n_clusters
 		mean_errors: list of reconstruction errors, each one specific for a given centroid 
 	"""
+	
 	df_clustering, relevant_features_centroids, centroids = k_means(create_features(dict_joints_SR_destrorso)[0], 
 	                                                            create_features(dict_joints_SR_destrorso)[1], 
 	                                                            n_clusters)

@@ -8,7 +8,7 @@ import operator
 class MatchingClass2():
     
   """
-  Matching Class Method 2
+  Matching Class Method 2.
   """
 
   links = [[0,1],[1,2],[2,3],[3,4],[1,5],[5,6],[1,8],[7,6],[8,9],
@@ -21,8 +21,9 @@ class MatchingClass2():
     self.pose_b = pose_b
 
   def ang(self, v):
+      
       """
-      Computes the angle of a vector v w.r.t. to the x axis in the range [0, 2*pi]
+      Compute the angle of a vector v with respect to to the x axis in the range [0, 2*pi].
       """
 
       if math.atan2(v[1], v[0]) > 0:
@@ -32,8 +33,9 @@ class MatchingClass2():
       return beta
 
   def diff_angs(self, ang1, ang2):
+      
       """
-      Computes the difference of two angles ang1, ang2 in the range [0, 2*pi]
+      Compute the difference between two angles ang1, ang2 in the range [0, 2*pi].
       """ 
 
       if ang1 - ang2 < 0:
@@ -44,8 +46,9 @@ class MatchingClass2():
       return diff        
 
   def angolo(self, joint_a, joint_b, joint_c, joint_d):
+    
     """
-    Computes the angle between two vectors v1, v2 where: 
+    Compute the angle between two vectors v1, v2 where: 
     v1 = joint_a-joint_b
     v2 = joint_c-joint_d
     """
@@ -55,6 +58,7 @@ class MatchingClass2():
     return self.diff_angs(self.ang(v2),self.ang(v1))
 
   def pose_mirroring(self, pose):
+    
     """
     Mirror the pose.
     """
@@ -70,9 +74,11 @@ class MatchingClass2():
     return mirrored_pose
 
   def turn_pose(self, pose):
+    
     """
     Turn the pose.
     """
+    
     M = max([pose[n][0] for n in range(len(pose))])
 
     t_pose = copy.deepcopy(pose)
@@ -83,9 +89,13 @@ class MatchingClass2():
     return t_pose
 
   def calcolo_angoli(self, joints):
+    
     """
-    Computes the angles among all the limbs for a given pose.
+    Compute the angles among all the limbs for a given pose.
+    Args:
+      joints: the input pose
     """
+    
     lista_angoli = []
     for i in range(len(self.links)):
       for j in range(i+1,len(self.links)):
@@ -100,9 +110,11 @@ class MatchingClass2():
     return np.array(lista_angoli)
 
   def diff(self, l1, l2):
+    
     """
-    Compute distance between feature vectors l1, l2
+    Compute the distance between two feature vectors l1, l2.
     """ 
+    
     diffs =  []
     for i in range(len(l1)):
       distance = 1-np.cos(l1-l2)
@@ -110,6 +122,7 @@ class MatchingClass2():
     return np.mean(diffs)
 
   def loss(self):
+    
     """
     Compute the difference (loss) between the query pose and a compared one. 
     The function returns the minimum difference between the pose b and the pose a (itself, mirrored and turned)
@@ -126,6 +139,7 @@ class MatchingClass2():
                self.diff(np.array(ang_pose_t_a), np.array(ang_pose_b)))
 
 def second_method_app(dict_joints_SR_destrorso):
+    
     """
     Apply the second method to search for the most similar poses to a given one (within the dictionary dict_joints_SR_destrorso).
     Output:
@@ -133,6 +147,7 @@ def second_method_app(dict_joints_SR_destrorso):
             keys: poses of the input dictionary
             values: list with the 5 closest poses (inluding the query) and the farthest one
     """
+    
     best_worst_cases_2 = {}
     for i in tqdm(range(len(dict_joints_SR_destrorso))):
         sample = dict_joints_SR_destrorso[list(dict_joints_SR_destrorso.keys())[i]]

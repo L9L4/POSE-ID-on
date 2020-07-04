@@ -5,9 +5,11 @@ import os
 from clustering.KMeans import *
 
 def ang(v):
+    
     """
-    Computes the angle of a vector v w.r.t. to the x axis in the range [0, 2*pi]
+    Compute the angle of a vector v with respect to to the x axis in the range [0, 2*pi].
     """
+    
     if math.atan2(v[1], v[0]) > 0:
         beta = math.atan2(v[1], v[0])
     else: 
@@ -15,9 +17,11 @@ def ang(v):
     return beta
 
 def diff_angs(ang1, ang2):
+    
     """
-    Computes the difference of two angles ang1, ang2 in the range [0, 2*pi]
+    Compute the difference between two angles ang1, ang2 in the range [0, 2*pi].
     """ 
+    
     if ang1 - ang2 < 0:
         diff = ang1 - ang2 + 2*np.pi
     else:
@@ -26,26 +30,34 @@ def diff_angs(ang1, ang2):
     return diff        
 
 def diff(l1, l2):
-    """
-    Computes the distance between two angles l1, l2 in the range [0,2]
-    """ 
+    
+  """
+  Compute a special kind of distance between two angles l1, l2 in the range [0,2].
+  """ 
+  
   distance = 1-np.cos(l1-l2)
   return distance
 
 def angolo(joint_a, joint_b, joint_c, joint_d):
+    
     """
-    Computes the angle between two vector v1, v2 where: 
+    Compute the angle between two vectors v1, v2 where: 
     v1 = joint_a-joint_b
     v2 = joint_c-joint_d
     """
+    
     v1 = np.array(joint_a) - np.array(joint_b)
     v2 = np.array(joint_c) - np.array(joint_d)
     return diff_angs(ang(v2),ang(v1))
 
 def calcolo_angoli_cons(joints):
-  """
-  Computes the angles between limbs sharing a joint for a given pose.
-  """
+  
+    """
+    Compute the angles between the limbs (of a given pose) which share a joint.
+    Args:
+      joints: the input pose
+    """
+    
     lista_angoli = []
     dict_an = {}
     for i in range(len(links)):
@@ -63,16 +75,18 @@ def calcolo_angoli_cons(joints):
     return [np.array(lista_angoli), dict_an]
 
 def k_means(x, n_clusters):
+  
   """
   Do the KMeans clustering, based on the 91 features.
   Args:
     x: array of features
     n_clusters: number of clusters
   Output:
-    new_df: the labeled dataframe, according to the kmeans alg
+    new_df: the labeled dataframe, according to the KMeans algorithm
     relevant_features_cs: a list with the relevant features (angles of the consecutive limbs) of the centroids
-    cs: dictionary with the features of the centroids
+    cs: dictionary with the centroid features 
   """
+
   kmeans = K_Means(k = n_clusters)
   cs, cls = kmeans.fit(x)
   d = pd.DataFrame()
@@ -100,15 +114,17 @@ def k_means(x, n_clusters):
   return new_df, relevant_features_cs, cs
 
 def ric_posa(relevant_features_cs, cluster, output_folder, links = links, dists = dists):
+  
   """
-  Compute and plot the pose of the centroid of kmeans.
+  Compute and plot the pose reconstructed from a centroid obtained with KMeans.
   Args:
     relevant_features_cs: a list with the relevant features (angles of the consecutive limbs) of the centroids
     cluster: cluster ID
     output_folder: output folder
-    dists: the average lenghts of each limb
-    links = list of limbs composed by a pair of joints
+    dists: the average lenght of each limb, computed on the basis of the whole dataset
+    links = list of limbs (each one identified by the respective pair of joints)
   """
+  
   dict_an = relevant_features_cs[cluster]
   P0 = np.array([500.0, 500.0])
   X1 = 500.0

@@ -6,8 +6,9 @@ import operator
 from utils.utils import *
 
 class Noises():
+  
   """
-  Compute some Gaussian noise to add to the poses, to see how much the error affects the matching classes results
+  Compute some Gaussian noise to add to the poses, to see how much the matching class results are affected by random noise.
   """
 
   sigma_range = np.logspace(-3, 0, 10)
@@ -20,21 +21,26 @@ class Noises():
     self.method = method
 
   def calc_radius(self):
+    
     """
     Compute the pose radius of gyration. https://en.wikipedia.org/wiki/Radius_of_gyration
     """
-  	punto_medio = [np.mean(np.array(self.posa)[:,0]), np.mean(np.array(self.posa)[:,1])]
-  	dista = 0
-  	for punto in self.posa:
-  		dista += np.power(punto[0]-punto_medio[0], 2) + np.power(punto[1]-punto_medio[1], 2)
-  	dista = dista/len(self.posa)
-  	return np.sqrt(dista)
+  	
+    punto_medio = [np.mean(np.array(self.posa)[:,0]), np.mean(np.array(self.posa)[:,1])]
+    dista = 0
+    for punto in self.posa:
+    	dista += np.power(punto[0]-punto_medio[0], 2) + np.power(punto[1]-punto_medio[1], 2)
+    	dista = dista/len(self.posa)
+    return np.sqrt(dista)
 
   def make_noised_poses(self, sigma = 0.05):
+    
     """
-    Add the noise to the poses.
-    sigma = the standard deviation of the Gaussian noise. It's multiplied to the radius.
+    Add noise to the poses (n different noisy poses are generated).
+    Args:
+      sigma = the standard deviation of the Gaussian noise. It's multiplied to the radius.
     """
+    
     radius = self.calc_radius()
     noised_poses = []
     for i in range(self.n):
@@ -48,9 +54,11 @@ class Noises():
     return noised_poses
 
   def noised_poses_sigmas(self):
+    
     """
-    Compute noisy poses with several sigmasm based on sigma_range parameter."
+    Compute n noisy poses for each sigma in the range defined by the sigma_range parameter.
     """
+    
     dict_noises = {}
     i = 0
     #radius = self.calc_radius()
@@ -62,8 +70,9 @@ class Noises():
     return dict_noises
   
   def calc_losses_sigma(self):
+    
     """
-    Compute the mean loss of each noisy pose for a given sigma with respect to the true one.
+    Compute the mean loss of each noisy pose for a given sigma with respect to the true pose.
     """
 
     losses_sigma = {}
@@ -97,9 +106,11 @@ class Noises():
     return losses_sigma
 
   def print_position(self):
+    
     """
-    The function, once sorted the losses, computes the positions of the noisy poses within the whole dataset w.r.t. the true one.
+    The function, once sorted the losses, computes the positions of the noisy poses within the whole dataset with respect to the true one.
     """
+    
     met = []
 
     dict_losses = {}
@@ -151,12 +162,15 @@ class Noises():
 
 
 def graph_losses(losses_sigma, bwc, sigma_range):
+  
   """
-  Plot the relationship between the loss and the sigma values.
-  losses_sigma: the dictionary with all the losses values w.r.t. the sigmas
-  bwc: the dictionary with the matching class results
-  sigma_range: the range of sigmas
+  Plot the relationship between the losses and the sigma values.
+  Args:
+    losses_sigma: the dictionary with all the losses values and the respective sigmas
+    bwc: the dictionary with the matching class results
+    sigma_range: the range of sigmas
   """
+  
   plt.figure(figsize=(10,10))
   plt.plot(sigma_range, list(losses_sigma.values()), 'bo-')
   plt.hlines(bwc, min(sigma_range)-1, max(sigma_range)+1, 'r')
@@ -171,12 +185,15 @@ def graph_losses(losses_sigma, bwc, sigma_range):
 
 
 def graph_position(position, max_pos, sigma_range):
+  
   """
-  Plot the position of the noisy poses within the whole dataset.
-  position: a list of the positions of the noisy poses
-  max_pos: position threshold
-  sigma_range: the range of sigmas
+  Plot the position of the noisy poses within the whole dataset, sorted according to the loss.
+  Args:
+    position: a list of the positions of the noisy poses
+    max_pos: position threshold
+    sigma_range: the range of sigmas
   """
+  
   plt.figure(figsize=(10,10))
   plt.plot(sigma_range, position, 'bo-')
   plt.hlines(max_pos, min(sigma_range)-1, max(sigma_range)+1, 'r')

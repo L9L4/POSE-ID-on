@@ -3,8 +3,9 @@ import random
 from tqdm import tqdm
 
 class K_Means:
+    
     """
-    K_means algorithm, with distance function customized for dealing with angular values
+    K_means algorithm; the distance function was customized for dealing with angular values.
     (https://en.wikipedia.org/wiki/Mean_of_circular_quantities)
     """
 
