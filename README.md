@@ -16,8 +16,16 @@ Pose-ID-on is a free and open source pipeline for **pose clustering of human sta
 ## Features
 
 This pipeline, given respectively a set of images of statues and of keyponts, gathers two products:
-- **pose comparison**, the first method is slower than the second, due to the fact that they are based on different angle comparison, but both lead to very satisfying results.;
+- **pose comparison**, the first method is slower than the second, due to the fact that they are based on different angle comparison, but both lead to very satisfying results;
 - **pose clustering**, based on K-Means algorithm in a non-euclidean space. Many clustering could be tried and interpreted.
+
+#### Pose comparison example
+<div align="center"><img src="images/comparison_ex.png", width="700"></div>
+
+#### Pose clustering example
+Following you can find an example of two clusters, from a nine cluster clustering.
+<div align="center"><img src="images/clustering_9_ex1.png", width="700"></div>
+<div align="center"><img src="images/clustering_9_ex2.png", width="700"></div>
 
 
 ## Installation
@@ -39,7 +47,11 @@ In the following parts of the notebook, all the section are accurately explained
 
 ## Output
 
-The user can obtain several outputs in different forms. Each of them is explained in the notebooks. Anyway, some results are directly shown in the notebook, other are created as images and txt file in directories within the cloned repo.
+The user can gather two types of output:
+- directly showed in the notebook (examples are visible);
+- saved locally:
+  - *.txt* files with the best and the worst cases based on the two comparison methods (we suggest to save these files, that could be loaded, without the need of computing it several times). The name of these files can be easily choosen by the user, directly in the notebook;
+  - *Cluster* directory, that will be created when the user will launch the clustering algorithm. In this directory, the user can find: n images of centroids reconstructed poses (with n, number of clusters), a *.txt* file with n lists, each containing the name of the images belonging to that cluster.
 
 ## To Do
 
