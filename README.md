@@ -25,7 +25,7 @@ The example shows the query pose, the four closest poses and the farthest one.
 
 #### Pose clustering example
 Following you can find an example of two clusters, the first one from a five clusters clustering and the second one from a ten clusters clustering.
-<div align="center"><img src="images/clustering_10_ex1.PNG", width="700"></div>
+<div align="center"><img src="images/clustering_5_ex1.PNG", width="700"></div>
 <div align="center"><img src="images/clustering_10_ex1.PNG", width="700"></div>
 
 
