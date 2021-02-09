@@ -20,10 +20,11 @@ This pipeline, given respectively a set of images of statues and of keyponts, ga
 - **pose clustering**, based on K-Means algorithm in a non-euclidean space. 
 
 #### Pose comparison example
+The example shows the query pose, the four closest poses and the farthest one.
 <div align="center"><img src="images/comparison_ex.png", width="700"></div>
 
 #### Pose clustering example
-Following you can find an example of two clusters, from a nine cluster clustering.
+Following you can find an example of two clusters, the first one from a five clusters clustering and the second one from a ten clusters clustering.
 <div align="center"><img src="images/clustering_9_ex1.png", width="700"></div>
 <div align="center"><img src="images/clustering_9_ex2.png", width="700"></div>
 
