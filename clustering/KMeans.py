@@ -23,6 +23,8 @@ class K_Means:
     
     def angular_mean(self, feature):
       feature = np.array(feature)
+      if len(feature.shape) == 1:
+        feature = np.reshape(feature, (1,91))
       mean = []
       for f in range(feature.shape[1]):
         col = feature[:,f]
