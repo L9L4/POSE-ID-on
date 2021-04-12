@@ -1,5 +1,5 @@
 # POSE-ID-on—A Novel Framework for Artwork Pose Clustering
-[<div align="center"><img src=".github/Logo.png", width="300"></div>]: <>
+[<div align="center"><img src=".github/Logo.png", width="100"></div>]: <>
 Pose-ID-on is a free and open source pipeline for **pose clustering of human statues**, to gather similar statues based on their poses. It is authored by [Valerio Marsocci](https://github.com/VMarsocci) and [Lorenzo Lastilla](https://github.com/L9L4). The pose-tracking stage of the process is based on [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose).
 
 <div align="center"><img src="images/logo_poseidon.png", width="700"></div>
@@ -60,10 +60,11 @@ The user can gather two types of output:
 
 ## License
 
-This is an open access article distributed under the [Creative Commons Attribution License] (https://creativecommons.org/licenses/by/4.0/) which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.
+This is an open access article distributed under the [Creative Commons Attribution License](https://creativecommons.org/licenses/by/4.0/) which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.
 
 ## Citation
 
+'''latex
 @Article{ijgi10040257,
 AUTHOR = {Marsocci, Valerio and Lastilla, Lorenzo},
 TITLE = {POSE-ID-on—A Novel Framework for Artwork Pose Clustering},
@@ -76,3 +77,4 @@ URL = {https://www.mdpi.com/2220-9964/10/4/257},
 ISSN = {2220-9964},
 DOI = {10.3390/ijgi10040257}
 }
+'''
