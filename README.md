@@ -10,7 +10,8 @@
 4. [Usage](#usage)
 5. [Output](#output)
 6. [License](#license)
-7. [Citation](#citation)
+7. [Logo](#logo)
+8. [Citation](#citation)
 
 <div align="center"><img src="images/example.png", width="700"></div>
 
@@ -59,6 +60,10 @@ The user can gather two types of output:
 ## License
 
 This is an open access article distributed under the [Creative Commons Attribution License](https://creativecommons.org/licenses/by/4.0/) which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.
+
+## Logo
+
+Logo was designed by Alfonso Levantesi.
 
 ## Citation
 
