@@ -1,8 +1,8 @@
-# Pose-ID-on
+# POSE-ID-on—A Novel Framework for Artwork Pose Clustering
 [<div align="center"><img src=".github/Logo.png", width="300"></div>]: <>
 Pose-ID-on is a free and open source pipeline for **pose clustering of human statues**, to gather similar statues based on their poses. It is authored by [Valerio Marsocci](https://github.com/VMarsocci) and [Lorenzo Lastilla](https://github.com/L9L4). The pose-tracking stage of the process is based on [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose).
 
-<div align="center"><img src="images/example.png", width="700"></div>
+<div align="center"><img src="images/logo_poseidon.png", width="700"></div>
 
 -----------------
 
@@ -11,13 +11,16 @@ Pose-ID-on is a free and open source pipeline for **pose clustering of human sta
 2. [Installation](#installation)
 4. [Usage](#usage)
 5. [Output](#output)
-6. [To Do](#to-do)
+6. [License](#license)
+7. [Citation](#citation)
+
+<div align="center"><img src="images/example.png", width="700"></div>
 
 ## Features
 
 This pipeline, given respectively a set of images of statues and of keyponts, gathers two products:
 - **pose comparison**, carried out in two different ways: the first method is slower than the second, but both lead to very satisfying results;
-- **pose clustering**, based on K-Means algorithm in a non-euclidean space. 
+- **pose clustering**, based on K-Medians algorithm in a non-euclidean space. Also K-Means and Hierarchical clustering algorithms are implemented.
 
 #### Pose comparison example
 The example shows the query pose, the four closest poses and the farthest one.
@@ -55,6 +58,21 @@ The user can gather two types of output:
   - *.txt* files with the most and least similar poses (with respect to a given one) based on the two comparison methods (we suggest to save these files, that could be successively loaded, without the need of computing them several times). The name of these files can be easily choosen by the user, directly in the notebook;
   - *./Cluster/* directory, created when the clustering algorithm is launched. In this directory, *n* images of reconstructed poses from centroids are saved (with *n* number of clusters), together with a *.txt* file with *n* lists, each containing the name of the images belonging to the *i-th* cluster.
 
-## To Do
+## License
 
-- Insert in the *ReadMe.md*, the *Citation* and the *License* sections when the article will be published.
+This is an open access article distributed under the [Creative Commons Attribution License] (https://creativecommons.org/licenses/by/4.0/) which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.
+
+## Citation
+
+@Article{ijgi10040257,
+AUTHOR = {Marsocci, Valerio and Lastilla, Lorenzo},
+TITLE = {POSE-ID-on—A Novel Framework for Artwork Pose Clustering},
+JOURNAL = {ISPRS International Journal of Geo-Information},
+VOLUME = {10},
+YEAR = {2021},
+NUMBER = {4},
+ARTICLE-NUMBER = {257},
+URL = {https://www.mdpi.com/2220-9964/10/4/257},
+ISSN = {2220-9964},
+DOI = {10.3390/ijgi10040257}
+}
