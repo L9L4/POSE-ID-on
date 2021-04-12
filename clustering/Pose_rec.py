@@ -2,7 +2,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import os
-from clustering.KMeans import *
+from clustering.Clustering import *
 
 def ang(v):
     
@@ -74,21 +74,24 @@ def calcolo_angoli_cons(joints):
             
     return [np.array(lista_angoli), dict_an]
 
-def k_means(x, n_clusters):
+def clustering(x, n_clusters):
   
   """
-  Do the KMeans clustering, based on the 91 features.
+  Do the clustering, based on the 91 features. 
+  We compute the reconstructed poses only with the following default parameters:
+    method: 'K-Medians'
+    distance: 'angular'
   Args:
     x: array of features
     n_clusters: number of clusters
   Output:
-    new_df: the labeled dataframe, according to the KMeans algorithm
+    new_df: the labeled dataframe, according to the clustering algorithm
     relevant_features_cs: a list with the relevant features (angles of the consecutive limbs) of the centroids
     cs: dictionary with the centroid features 
   """
 
-  kmeans = K_Means(k = n_clusters)
-  cs, cls = kmeans.fit(x)
+  clustering_ = Clustering(k = n_clusters)
+  cs, cls = clustering_.fit(x)
   d = pd.DataFrame()
   l = []
   for i in range(len(cs)):
@@ -116,7 +119,7 @@ def k_means(x, n_clusters):
 def ric_posa(relevant_features_cs, cluster, output_folder, links = links, dists = dists):
   
   """
-  Compute and plot the pose reconstructed from a centroid obtained with KMeans.
+  Compute and plot the pose reconstructed from a centroid obtained with the clustering algorithm.
   Args:
     relevant_features_cs: a list with the relevant features (angles of the consecutive limbs) of the centroids
     cluster: cluster ID

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import os
 import pandas as pd
-from clustering.KMeans import *
+from clustering.Clustering import *
 from utils.utils import *
 from methods.Second_method import *
 
@@ -39,16 +39,18 @@ def create_features(dict_joints_SR_destrorso):
 
 	return x, df
 
-def k_means(x, df, n_clusters = 10):
+def clustering(x, df, n_clusters = 10, distance = 'angular', method = 'K-medians'):
   
   """
-  Do the KMeans clustering, based on the 91 features.
+  Do the clustering, based on the 91 features.
   Args:
 	  x: array of features
 	  df: dataframe of features
 	  n_clusters: number of clusters
+	  distance: could be 'angular' or 'euclidean';
+      method: could be 'K-medians', 'K-means', 'Hierarchical'
   Output:
-	  new_df: the labeled dataframe, according to the KMeans algorithm
+	  new_df: the labeled dataframe, according to the clustering algorithm
 	  relevant_features_cs: a list with the relevant features (angles of the consecutive limbs) of the centroids
 	  cs: dictionary with the centroid features 
   """
@@ -56,11 +58,14 @@ def k_means(x, df, n_clusters = 10):
   relevant_features_id = [0,3,5,13,15,17,25,46,47,56,64,65,76,77,83,85,90]
   keys_dict = ['0-1', '0-4', '0-6', '1-2', '1-4', '1-6', '2-3', '4-5', '4-6', '5-7', '6-8', '6-9', '8-9', '8-10', '9-12', '10-11', '12-13']
 
-  kmeans = K_Means(k = n_clusters)
-  cs, cls = kmeans.fit(x)
+  clustering_ = Clustering(k = n_clusters, distance = distance, method = method)
+  cs, cls = clustering_.fit(x)
+
+  assert len(list(cls.keys())) == n_clusters
+  
   d = pd.DataFrame()
   l = []
-  for i in range(len(cs)):
+  for i in range(n_clusters):
     df1 = pd.DataFrame(cls[i])
     d = pd.concat([d,df1], sort = False)
     l += [i]*len(cls[i])
@@ -70,22 +75,23 @@ def k_means(x, df, n_clusters = 10):
 
   new_df = df.reset_index().merge(d).set_index('index')
 
-  assert len(cs) == n_clusters
-
   relevant_features_cs = []
-  for i in range(len(cs)):
-    d = {}
-    cs_rf = cs[i][relevant_features_id]
-    for k in range(len(keys_dict)):
-      d[keys_dict[k]] = cs_rf[k]
-    relevant_features_cs.append(d)
+  if method == 'Hierarchical':
+  	pass
+  else:
+  	for i in range(len(cs)):
+  		d = {}
+  		cs_rf = cs[i][relevant_features_id]
+  		for k in range(len(keys_dict)):
+  			d[keys_dict[k]] = cs_rf[k]
+  		relevant_features_cs.append(d)
 
   return new_df, relevant_features_cs, cs
 
 def ric_posa(relevant_features_cs, cluster, output_folder, dists, save = True):
   
   """
-  Compute and plot the pose reconstructed from a centroid obtained with KMeans.
+  Compute and plot the pose reconstructed from a centroid obtained with clustering.
   Args:
   	relevant_features_cs: a list with the relevant features (angles of the consecutive limbs) of the centroids
   	cluster: cluster ID
@@ -155,7 +161,7 @@ def ric_posa(relevant_features_cs, cluster, output_folder, dists, save = True):
 def clustering_several_n(list_n_clusters, dict_):
 	
 	"""
-	Compute the KMeans algorithm for all the values contained in list_n_clusters.
+	Compute the clustering algorithm for all the values contained in list_n_clusters.
 	Args:
 		list_n_clusters: list with the number of clusters for each clustering
 		dict_: dictionary with all the poses
@@ -177,7 +183,7 @@ def clustering_several_n(list_n_clusters, dict_):
 
 	for n_c in trials:
 	  n_c_poses = []
-	  new_df, relevant_features_cs, cs = k_means(create_features(dict_)[0], create_features(dict_)[1], n_c)
+	  new_df, relevant_features_cs, cs = clustering(create_features(dict_)[0], create_features(dict_)[1], n_c)
 	  out_fold = root + os.sep + str(n_c)
 	  if not os.path.exists(out_fold):
 	    os.makedirs(out_fold)
@@ -195,7 +201,7 @@ def clustering_several_n(list_n_clusters, dict_):
 def mean_reconstruction_error(n_clusters, dict_joints_SR_destrorso):
 	
 	"""
-	For all the centroids obtained from KMeans with n_clusters clusters, compute the difference between the centroid feature vector and the one
+	For all the centroids obtained from clustering with n_clusters clusters, compute the difference between the centroid feature vector and the one
 	obtained from the reconstructed pose.
 	Args:
 		n_clusters: number of clusters 
@@ -205,7 +211,7 @@ def mean_reconstruction_error(n_clusters, dict_joints_SR_destrorso):
 		mean_errors: list of reconstruction errors, each one specific for a given centroid 
 	"""
 	
-	df_clustering, relevant_features_centroids, centroids = k_means(create_features(dict_joints_SR_destrorso)[0], 
+	df_clustering, relevant_features_centroids, centroids = clustering(create_features(dict_joints_SR_destrorso)[0], 
 	                                                            create_features(dict_joints_SR_destrorso)[1], 
 	                                                            n_clusters)
 	dists = dist_medie(dict_joints_SR_destrorso)

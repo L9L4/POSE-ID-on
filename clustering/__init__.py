@@ -6,6 +6,6 @@ import os
 import pandas as pd
 import random
 
-from clustering.KMeans import *
+from clustering.Clustering import *
 from utils.utils import *
 from methods.Second_method import *
