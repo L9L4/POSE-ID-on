@@ -7,11 +7,11 @@
 ## Contents
 1. [Features](#features)
 2. [Installation](#installation)
-4. [Usage](#usage)
-5. [Output](#output)
-6. [License](#license)
-7. [Logo](#logo)
-8. [Citation](#citation)
+3. [Usage](#usage)
+4. [Output](#output)
+5. [License](#license)
+6. [Logo](#logo)
+7. [Citation](#citation)
 
 <div align="center"><img src="images/example.png", width="700"></div>
 
